@@ -128,7 +128,6 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="http_parser.c" />
-    <ClCompile Include="test.cpp" />
     <ClCompile Include="test_parse.cc" />
   </ItemGroup>
   <ItemGroup>

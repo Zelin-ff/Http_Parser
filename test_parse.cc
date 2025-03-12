@@ -34,11 +34,11 @@ int onRespHeaderValue(http_parser* pParser, const char* at, size_t length);
 int onRespBody(http_parser* pParser, const char* at, size_t length);
 
 
+
+// 模拟解析http请求和响应
 int main(int argc, char* argv[])
 {
-    // 解析http请求
-
-    // 待解析的请求报文
+    // 1. 待解析的请求报文
     std::string strHttpReq;
     strHttpReq += "POST /http-parser HTTP/1.1\r\n";
     strHttpReq += "Host: 127.0.0.1:10010\r\n";
@@ -53,6 +53,7 @@ int main(int argc, char* argv[])
 
     // 初使化解析器
     http_parser_init(&httpReqParser, HTTP_REQUEST);
+
     // 设置回调函数
     http_parser_settings_init(&httpReqSettings);
     httpReqSettings.on_message_begin = onReqMessageBegin;
@@ -63,7 +64,7 @@ int main(int argc, char* argv[])
     httpReqSettings.on_header_value = onReqHeaderValue;
     httpReqSettings.on_body = onReqBody;
 
-    // 解析请求
+    // 执行解析 http_parser_execute()
     size_t reqSize = strHttpReq.size();
     size_t nParseSize = http_parser_execute(&httpReqParser, &httpReqSettings, strHttpReq.c_str(), reqSize);
     if (nParseSize < reqSize) {
@@ -71,11 +72,12 @@ int main(int argc, char* argv[])
         return -1;
     }
 
-    printf("origin message:\n%s\n", strHttpReq.c_str());
+    // 显示原始请求报文
+    //printf("origin message:\n%s\n", strHttpReq.c_str());
     printf("==========================================\n");
 
 
-    // 解析成功，打印解析结果
+    // 解析成功，打印解析后的结果
     if (httpReqParser.method == HTTP_GET) {
         printf("method: Get\n");
     }
@@ -98,10 +100,9 @@ int main(int argc, char* argv[])
 
     printf("==========================================\n");
 
-    // 解析http响应
 
 
-    // 待解析的响应报文
+    // 2. 解析http响应，待解析的响应报文
     std::string strHttpResponse;
     strHttpResponse += "HTTP/1.1 200 OK\r\n";
     strHttpResponse += "Server: nginx/1.18.0\r\n";
